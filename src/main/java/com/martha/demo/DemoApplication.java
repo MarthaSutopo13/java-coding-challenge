@@ -22,7 +22,7 @@ public class DemoApplication {
 		Integer annualTaxIncome = monthlySalary * 12;
 
 		System.out.println("========================================================");
-		System.out.println("No1");
+		System.out.println("No2");
 		System.out.println("Annual taxable income: "+ annualTaxIncome);
 		System.out.printf("Annual Tax on this Income: %.0f\n", calculateTax(annualTaxIncome));
 	}
@@ -44,7 +44,7 @@ public class DemoApplication {
 		}
 
 		System.out.println("========================================================");
-		System.out.println("No2");
+		System.out.println("No3");
 		System.out.println("Annual taxable income: "+ annualTaxableIncome);
 		System.out.printf("Annual tax income: %.0f\n", calculateTax(annualTaxableIncome));
 	}
@@ -54,7 +54,6 @@ public class DemoApplication {
 		long[] decrease = {50000000, 200000000, 250000000};
 		double[] rate = {0.05, 0.15, 0.25, 0.30};
 		double annualTaxIncome = 0;
-
 
 		if (annualTaxableIncome > 0 && annualTaxableIncome <= maxIncome[0]) {
 			annualTaxIncome = rate[0] * annualTaxableIncome;
