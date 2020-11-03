@@ -1,5 +1,6 @@
 package com.martha.demo;
 
+import org.apache.commons.logging.Log;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -23,7 +24,7 @@ public class DemoApplication {
 		System.out.println("========================================================");
 		System.out.println("No1");
 		System.out.println("Annual taxable income: "+ annualTaxIncome);
-		System.out.printf("Annual Tax on this Income: %.0f\n", calculateTaxPph(annualTaxIncome));
+		System.out.printf("Annual Tax on this Income: %.0f\n", calculateTax(annualTaxIncome));
 	}
 
 	public static void taxRelief(Integer category, long monthlySalary) {
@@ -45,41 +46,31 @@ public class DemoApplication {
 		System.out.println("========================================================");
 		System.out.println("No2");
 		System.out.println("Annual taxable income: "+ annualTaxableIncome);
-		System.out.printf("Annual tax income: %.0f\n", calculateTaxPph(annualTaxableIncome));
+		System.out.printf("Annual tax income: %.0f\n", calculateTax(annualTaxableIncome));
 	}
 
-	public static Double calculateTaxPph(long annualTaxableIncome) {
-		long maxIncome1 = 50000000, maxIncome2 = 250000000, maxIncome3 = 500000000;
-		long decrease1 = 50000000, decrease2 = 200000000, decrease3 = 250000000;
-		double rate1 = 0.05, rate2 = 0.15, rate3 = 0.25, rate4 = 0.30;
+	public static Double calculateTax(long annualTaxableIncome) {
+		long[] maxIncome = {50000000, 250000000, 500000000};
+		long[] decrease = {50000000, 200000000, 250000000};
+		double[] rate = {0.05, 0.15, 0.25, 0.30};
 		double annualTaxIncome = 0;
 
-		if (annualTaxableIncome > 0 && annualTaxableIncome <= maxIncome1) {
-			annualTaxIncome = rate1 * annualTaxableIncome;
-		}
 
-		if (annualTaxableIncome > maxIncome1 && annualTaxableIncome <= maxIncome2) {
-			annualTaxableIncome -= decrease1;
-			annualTaxIncome = rate1 * decrease1;
-			annualTaxIncome += rate2 * annualTaxableIncome;
-		}
-
-		if (annualTaxableIncome > maxIncome2 && annualTaxableIncome <= maxIncome3) {
-			annualTaxableIncome -= decrease1;
-			annualTaxableIncome -= decrease2;
-			annualTaxIncome = rate1 * decrease1;
-			annualTaxIncome += rate2 * decrease2;
-			annualTaxIncome += rate3 * annualTaxableIncome;
-		}
-
-		if (annualTaxableIncome > maxIncome3) {
-			annualTaxableIncome -= decrease1;
-			annualTaxableIncome -= decrease2;
-			annualTaxableIncome -= decrease3;
-			annualTaxIncome = rate1 * decrease1;
-			annualTaxIncome += rate2 * decrease2;
-			annualTaxIncome += rate3 * decrease3;
-			annualTaxIncome += rate4 * annualTaxableIncome;
+		if (annualTaxableIncome > 0 && annualTaxableIncome <= maxIncome[0]) {
+			annualTaxIncome = rate[0] * annualTaxableIncome;
+		} else {
+			for (var a = 0; a < maxIncome.length; a++) {
+				if (annualTaxableIncome >= maxIncome[a]) {
+					annualTaxIncome += rate[a] * decrease[a];
+					annualTaxableIncome -= decrease[a];
+					if (a == maxIncome.length - 1) {
+						annualTaxIncome += rate[a+1] * annualTaxableIncome;
+					}
+				} else {
+					annualTaxIncome += rate[a] * annualTaxableIncome;
+					annualTaxableIncome -= annualTaxableIncome;
+				}
+			}
 		}
 
 		return annualTaxIncome;
